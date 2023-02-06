@@ -51,23 +51,28 @@ async def mes_all(message: types.Message):
     if message.text.isdigit():
         user_id_message = message.from_user.id
         candy_left = pve_dict[user_id_message]
+        user_id =  message.from_user.id
         candy_left -= int(message.text)
-        await message.answer(f'На столе осталось {candy_left} конфет')
-        if candy_left <= 0:
-            await message.answer(f'Вы победили!')
-            pve_dict[user_id]  = total
-        else:
-            hod_bot = candy_left % 29
-            if hod_bot == 0:
-                hod_bot = RI(1,28)
-            await message.answer(f'А я заберу {hod_bot} конфет')
-            candy_left -= hod_bot
+        if 0 < int(message.text) < 29:
             await message.answer(f'На столе осталось {candy_left} конфет')
             if candy_left <= 0:
+                await message.answer(f'Вы победили!')
                 pve_dict[user_id]  = total
-                await message.answer(f'Победил бот!')
             else:
-                pve_dict[user_id_message] = candy_left
+                hod_bot = candy_left % 29
+                if hod_bot == 0:
+                    hod_bot = RI(1,28)
+                await message.answer(f'А я заберу {hod_bot} конфет')
+                candy_left -= hod_bot
+                await message.answer(f'На столе осталось {candy_left} конфет')
+                if candy_left <= 0:
+                    pve_dict[user_id]  = total
+                    await message.answer(f'Победил бот!')
+                    await message.answer(f'На столе снова {total}!')
+                else:
+                    pve_dict[user_id_message] = candy_left
+        else:
+            await message.answer(f'можно взять от 1 до 28 конфет')
 
 
 
